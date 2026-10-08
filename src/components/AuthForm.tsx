@@ -33,6 +33,25 @@ export default function AuthForm({ type }: AuthFormProps) {
   const searchParams = useSearchParams();
   const isLogin = type === 'login';
 
+  // Jika user sudah login, arahkan langsung ke halaman beranda (/)
+  useEffect(() => {
+    supabase.auth.getSession().then((res: any) => {
+      if (res?.data?.session?.user) {
+        router.replace('/');
+      }
+    });
+
+    const { data: { subscription } }: any = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+      if (session?.user) {
+        router.replace('/');
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, [router]);
+
   // Tampilkan error dari URL (misal: redirect balik dari OAuth callback gagal)
   useEffect(() => {
     const errorMsg = searchParams.get('error');
@@ -57,7 +76,7 @@ export default function AuthForm({ type }: AuthFormProps) {
           title: 'LOGIN BERHASIL!',
         });
         setTimeout(() => {
-          router.push('/dashboard');
+          router.push('/');
           router.refresh();
         }, 2100);
       } else {
