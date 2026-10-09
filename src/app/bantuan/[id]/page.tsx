@@ -388,34 +388,45 @@ export default function DetailBantuanPage() {
 
               {/* KONDISI 1: JIKA PEMBUKA HALAMAN ADALAH PEMOHON -> HUBUNGI RELAWAN */}
               {isAuthor ? (
-                <div className="p-4 sm:p-5 border-2 border-border-custom bg-card space-y-3">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <MessageCircle size={16} className="text-emerald-600 dark:text-emerald-400" />
-                        <h4 className="font-bold text-xs sm:text-sm text-text-primary uppercase tracking-wide font-mono">
-                          Hubungi Relawan via WhatsApp
-                        </h4>
-                        <span className="font-mono text-[10px] px-2 py-0.5 border border-border-custom bg-bg-slate-gray text-text-muted font-bold">
-                          KOLABORASI PEMOHON
-                        </span>
+                <div className="p-5 sm:p-6 border-2 border-border-custom bg-card shadow-[3px_3px_0px_0px_var(--border)] space-y-4">
+                  {/* Top Bar: Title & Badge */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-border-custom pb-3">
+                    <div className="flex items-center gap-2">
+                      <MessageCircle size={18} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                      <h4 className="font-bold text-xs sm:text-sm text-text-primary uppercase tracking-wide font-mono">
+                        Hubungi Relawan via WhatsApp
+                      </h4>
+                    </div>
+                    <span className="font-mono text-[10px] px-2.5 py-0.5 border border-border-custom bg-bg-slate-gray text-text-muted font-bold whitespace-nowrap self-start sm:self-auto">
+                      ✦ KOLABORASI PEMOHON
+                    </span>
+                  </div>
+
+                  {/* Body: Deskripsi & Nomor Kontak */}
+                  <div className="space-y-3">
+                    <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                      {request.volunteer_phone
+                        ? `Koordinasi langsung dengan relawan (${request.volunteer_name || 'Relawan'}) melalui WhatsApp untuk menyepakati waktu dan rincian bantuan.`
+                        : `Relawan (${request.volunteer_name || 'Relawan'}) belum mencantumkan nomor WhatsApp langsung pada bantuan ini.`}
+                    </p>
+
+                    {request.volunteer_phone ? (
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-bg-slate-gray border border-border-custom font-mono text-xs text-text-primary">
+                        <Phone size={13} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                        <span>Nomor Kontak Relawan: <strong className="font-bold">{request.volunteer_phone}</strong></span>
                       </div>
-                      <p className="text-xs text-text-muted max-w-md">
-                        {request.volunteer_phone
-                          ? `Koordinasi langsung dengan relawan (${request.volunteer_name || 'Relawan'}) melalui WhatsApp untuk menyepakati waktu dan rincian bantuan.`
-                          : `Relawan (${request.volunteer_name || 'Relawan'}) belum mencantumkan nomor WhatsApp langsung pada bantuan ini.`}
-                      </p>
-                      {request.volunteer_phone ? (
-                        <div className="flex items-center gap-1.5 font-mono text-[11px] text-text-muted pt-0.5">
-                          <Phone size={11} />
-                          <span>Nomor Kontak Relawan: <strong>{request.volunteer_phone}</strong></span>
-                        </div>
-                      ) : request.volunteer_email ? (
-                        <div className="flex items-center gap-1.5 font-mono text-[11px] text-text-muted pt-0.5">
-                          <Mail size={11} />
-                          <span>Email Relawan: <strong>{request.volunteer_email}</strong></span>
-                        </div>
-                      ) : null}
+                    ) : request.volunteer_email ? (
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-bg-slate-gray border border-border-custom font-mono text-xs text-text-primary">
+                        <Mail size={13} className="text-text-muted flex-shrink-0" />
+                        <span>Email Relawan: <strong className="font-bold">{request.volunteer_email}</strong></span>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {/* Footer: Tombol Aksi */}
+                  <div className="pt-3 border-t border-border-custom/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="text-[11px] font-mono text-text-muted">
+                      * Percakapan langsung via aplikasi WhatsApp
                     </div>
 
                     {request.volunteer_phone ? (
@@ -428,17 +439,17 @@ export default function DetailBantuanPage() {
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full sm:w-auto px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white border-2 border-border-custom retro-btn inline-flex items-center justify-center gap-2 flex-shrink-0 transition-colors"
+                        className="w-full sm:w-auto px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white border-2 border-border-custom retro-btn inline-flex items-center justify-center gap-2 transition-colors whitespace-nowrap"
                       >
-                        <MessageCircle size={16} />
+                        <MessageCircle size={15} />
                         <span>Chat ke WhatsApp Relawan</span>
                       </a>
                     ) : request.volunteer_email ? (
                       <a
                         href={`mailto:${request.volunteer_email}?subject=${encodeURIComponent(`Koordinasi Bantuan: ${request.title}`)}`}
-                        className="w-full sm:w-auto px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-wider bg-text-primary text-background border-2 border-border-custom retro-btn inline-flex items-center justify-center gap-2 flex-shrink-0 transition-colors"
+                        className="w-full sm:w-auto px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-wider bg-text-primary text-background border-2 border-border-custom retro-btn inline-flex items-center justify-center gap-2 transition-colors whitespace-nowrap"
                       >
-                        <Mail size={14} />
+                        <Mail size={15} />
                         <span>Kirim Email ke Relawan</span>
                       </a>
                     ) : (
@@ -451,29 +462,40 @@ export default function DetailBantuanPage() {
               ) : isVolunteer ? (
                 /* KONDISI 2: JIKA PEMBUKA HALAMAN ADALAH RELAWAN -> HUBUNGI PEMOHON */
                 <div className="space-y-3">
-                  <div className="p-4 sm:p-5 border-2 border-border-custom bg-card space-y-3">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <MessageCircle size={16} className="text-emerald-600 dark:text-emerald-400" />
-                          <h4 className="font-bold text-xs sm:text-sm text-text-primary uppercase tracking-wide font-mono">
-                            Hubungi Pemohon via WhatsApp
-                          </h4>
-                          <span className="font-mono text-[10px] px-2 py-0.5 border border-border-custom bg-bg-slate-gray text-text-muted font-bold">
-                            KOLABORASI RELAWAN
-                          </span>
+                  <div className="p-5 sm:p-6 border-2 border-border-custom bg-card shadow-[3px_3px_0px_0px_var(--border)] space-y-4">
+                    {/* Top Bar: Title & Badge */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-border-custom pb-3">
+                      <div className="flex items-center gap-2">
+                        <MessageCircle size={18} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                        <h4 className="font-bold text-xs sm:text-sm text-text-primary uppercase tracking-wide font-mono">
+                          Hubungi Pemohon via WhatsApp
+                        </h4>
+                      </div>
+                      <span className="font-mono text-[10px] px-2.5 py-0.5 border border-border-custom bg-bg-slate-gray text-text-muted font-bold whitespace-nowrap self-start sm:self-auto">
+                        ✦ KOLABORASI RELAWAN
+                      </span>
+                    </div>
+
+                    {/* Body: Deskripsi & Kontak */}
+                    <div className="space-y-3">
+                      <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                        {request.author_phone
+                          ? `Koordinasi langsung dengan pemohon (${authorName}) melalui WhatsApp untuk menyepakati waktu dan rincian bantuan.`
+                          : `Pemohon belum mencantumkan nomor WhatsApp langsung pada formulir permohonan ini.`}
+                      </p>
+
+                      {request.author_phone && (
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-bg-slate-gray border border-border-custom font-mono text-xs text-text-primary">
+                          <Phone size={13} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                          <span>Nomor Kontak Pemohon: <strong className="font-bold">{request.author_phone}</strong></span>
                         </div>
-                        <p className="text-xs text-text-muted max-w-md">
-                          {request.author_phone
-                            ? `Koordinasi langsung dengan pemohon (${authorName}) melalui WhatsApp untuk menyepakati waktu dan rincian bantuan.`
-                            : `Pemohon belum mencantumkan nomor WhatsApp langsung pada formulir permohonan ini.`}
-                        </p>
-                        {request.author_phone && (
-                          <div className="flex items-center gap-1.5 font-mono text-[11px] text-text-muted pt-0.5">
-                            <Phone size={11} />
-                            <span>Nomor Kontak Pemohon: <strong>{request.author_phone}</strong></span>
-                          </div>
-                        )}
+                      )}
+                    </div>
+
+                    {/* Footer: Tombol Aksi */}
+                    <div className="pt-3 border-t border-border-custom/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="text-[11px] font-mono text-text-muted">
+                        * Percakapan langsung via aplikasi WhatsApp
                       </div>
 
                       {request.author_phone ? (
@@ -486,9 +508,9 @@ export default function DetailBantuanPage() {
                           )}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full sm:w-auto px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white border-2 border-border-custom retro-btn inline-flex items-center justify-center gap-2 flex-shrink-0 transition-colors"
+                          className="w-full sm:w-auto px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white border-2 border-border-custom retro-btn inline-flex items-center justify-center gap-2 transition-colors whitespace-nowrap"
                         >
-                          <MessageCircle size={16} />
+                          <MessageCircle size={15} />
                           <span>Chat ke WhatsApp Pemohon</span>
                         </a>
                       ) : (
@@ -512,7 +534,7 @@ export default function DetailBantuanPage() {
                           setPhoneModalValue(currentUserMeta?.phone_number || currentUserMeta?.phone || '');
                           setShowPhoneModal(true);
                         }}
-                        className="font-bold underline text-text-primary hover:text-emerald-600 transition-colors flex-shrink-0"
+                        className="font-bold underline text-text-primary hover:text-emerald-600 transition-colors flex-shrink-0 whitespace-nowrap"
                       >
                         [+ Pasang No. WhatsApp Relawan]
                       </button>
@@ -521,23 +543,28 @@ export default function DetailBantuanPage() {
                 </div>
               ) : (
                 /* KONDISI 3: PENGUNJUNG UMUM / WARGA LAINNYA */
-                <div className="p-4 sm:p-5 border-2 border-border-custom bg-card space-y-4">
-                  <div className="border-b border-border-custom pb-2">
+                <div className="p-5 sm:p-6 border-2 border-border-custom bg-card shadow-[3px_3px_0px_0px_var(--border)] space-y-4">
+                  <div className="flex items-center justify-between border-b-2 border-border-custom pb-3">
                     <h4 className="font-bold text-xs sm:text-sm text-text-primary uppercase tracking-wide font-mono flex items-center gap-2">
                       <MessageCircle size={16} className="text-emerald-600 dark:text-emerald-400" />
                       Saluran Koordinasi Bantuan (WhatsApp)
                     </h4>
+                    <span className="font-mono text-[10px] px-2 py-0.5 border border-border-custom bg-bg-slate-gray text-text-muted font-bold whitespace-nowrap">
+                      UMUM
+                    </span>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
                     {/* Kontak Pemohon */}
-                    <div className="p-3 bg-bg-slate-gray border border-border-custom space-y-2">
-                      <div className="font-mono text-xs font-bold text-text-primary">
-                        👤 PEMOHON: {authorName}
+                    <div className="p-3.5 bg-bg-slate-gray border-2 border-border-custom flex flex-col justify-between gap-3">
+                      <div className="space-y-1">
+                        <div className="font-mono text-xs font-bold text-text-primary">
+                          👤 PEMOHON: {authorName}
+                        </div>
+                        <p className="font-mono text-[11px] text-text-muted">
+                          {request.author_phone ? `No. Kontak: ${request.author_phone}` : 'Nomor kontak belum dicantumkan'}
+                        </p>
                       </div>
-                      <p className="font-mono text-[11px] text-text-muted">
-                        {request.author_phone ? `No. Kontak: ${request.author_phone}` : 'Nomor kontak tidak dicantumkan'}
-                      </p>
                       {request.author_phone && (
                         <a
                           href={formatWhatsAppToRequester(
@@ -548,7 +575,7 @@ export default function DetailBantuanPage() {
                           )}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full py-1.5 px-3 font-mono text-[11px] font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white border border-border-custom retro-btn inline-flex items-center justify-center gap-1.5 transition-colors"
+                          className="w-full py-2 px-3 font-mono text-[11px] font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white border border-border-custom retro-btn inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap"
                         >
                           <MessageCircle size={13} />
                           <span>Hubungi Pemohon</span>
@@ -557,13 +584,15 @@ export default function DetailBantuanPage() {
                     </div>
 
                     {/* Kontak Relawan */}
-                    <div className="p-3 bg-bg-slate-gray border border-border-custom space-y-2">
-                      <div className="font-mono text-xs font-bold text-text-primary">
-                        🤝 RELAWAN: {request.volunteer_name || 'Relawan Warga'}
+                    <div className="p-3.5 bg-bg-slate-gray border-2 border-border-custom flex flex-col justify-between gap-3">
+                      <div className="space-y-1">
+                        <div className="font-mono text-xs font-bold text-text-primary">
+                          🤝 RELAWAN: {request.volunteer_name || 'Relawan Warga'}
+                        </div>
+                        <p className="font-mono text-[11px] text-text-muted">
+                          {request.volunteer_phone ? `No. Kontak: ${request.volunteer_phone}` : 'Nomor kontak belum dicantumkan'}
+                        </p>
                       </div>
-                      <p className="font-mono text-[11px] text-text-muted">
-                        {request.volunteer_phone ? `No. Kontak: ${request.volunteer_phone}` : 'Nomor kontak tidak dicantumkan'}
-                      </p>
                       {request.volunteer_phone && (
                         <a
                           href={formatWhatsAppToVolunteer(
@@ -574,7 +603,7 @@ export default function DetailBantuanPage() {
                           )}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full py-1.5 px-3 font-mono text-[11px] font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white border border-border-custom retro-btn inline-flex items-center justify-center gap-1.5 transition-colors"
+                          className="w-full py-2 px-3 font-mono text-[11px] font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white border border-border-custom retro-btn inline-flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap"
                         >
                           <MessageCircle size={13} />
                           <span>Hubungi Relawan</span>
