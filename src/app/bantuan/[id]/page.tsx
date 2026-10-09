@@ -5,10 +5,21 @@ import { supabase } from '@/lib/supabase';
 import { useParams, useRouter } from 'next/navigation';
 import { HelpRequest } from '@/types';
 import StatusBadge from '@/components/StatusBadge';
-import { MapPin, Calendar, User, ArrowLeft, HeartHandshake, CheckCircle2 } from 'lucide-react';
+import { MapPin, Calendar, User, ArrowLeft, HeartHandshake, CheckCircle2, MessageCircle, Phone } from 'lucide-react';
 import { format } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
 import { toast, notify } from '@/lib/notify';
+
+function formatWhatsAppLink(phone: string, requesterName: string, title: string) {
+  let clean = phone.replace(/\D/g, '');
+  if (clean.startsWith('0')) {
+    clean = '62' + clean.slice(1);
+  } else if (clean.startsWith('8')) {
+    clean = '62' + clean;
+  }
+  const msg = `Halo ${requesterName || 'Bapak/Ibu'}, saya relawan dari BantuanWarga yang bersedia membantu permohonan Anda: "${title}". Kapan kita bisa berkoordinasi lebih lanjut?`;
+  return `https://wa.me/${clean}?text=${encodeURIComponent(msg)}`;
+}
 
 export default function DetailBantuanPage() {
   const { id } = useParams<{ id: string }>();
@@ -72,7 +83,7 @@ export default function DetailBantuanPage() {
 
     notify.confirm({
       title: 'KONFIRMASI TINDAKAN RELAWAN',
-      message: `Apakah Anda yakin ingin menyatakan diri sebagai relawan untuk permohonan:\n"${request?.title}"?\n\nStatus akan berubah menjadi SELESAI.`,
+      message: `Apakah Anda yakin ingin menyatakan diri sebagai relawan untuk permohonan:\n"${request?.title}"?\n\nStatus akan berubah menjadi SELESAI dan Anda dapat langsung berkoordinasi via WhatsApp.`,
       confirmText: 'Ya, Saya Bantu!',
       cancelText: 'Batal',
       onConfirm: async () => {
@@ -107,7 +118,7 @@ export default function DetailBantuanPage() {
             } : null
           );
           toast.success(
-            `Terima kasih, ${volunteerName}! Status bantuan telah diperbarui menjadi SELESAI. Solidaritas Anda sangat berarti!`,
+            `Terima kasih, ${volunteerName}! Anda terdaftar sebagai relawan. Silakan gunakan tombol WhatsApp di bawah untuk menghubungi pemohon.`,
             { title: 'TERIMA KASIH, RELAWAN!' }
           );
         } catch (error: any) {
@@ -230,11 +241,51 @@ export default function DetailBantuanPage() {
               </div>
             )
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="font-mono text-xs font-bold text-text-primary p-3.5 bg-card border-2 border-border-custom flex items-center gap-2">
                 <CheckCircle2 size={16} className="text-text-primary flex-shrink-0" />
                 <span>[ STATUS SELESAI ]: Bantuan ini telah diselesaikan oleh relawan. Terima kasih atas kepedulian bersama!</span>
               </div>
+
+              {/* WhatsApp Chat Button to Requester */}
+              <div className="p-4 sm:p-5 border-2 border-border-custom bg-card space-y-3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-xs sm:text-sm text-text-primary uppercase tracking-wide flex items-center gap-2 font-mono">
+                      <MessageCircle size={16} className="text-emerald-600 dark:text-emerald-400" />
+                      Hubungi Pemohon via WhatsApp
+                    </h4>
+                    <p className="text-xs text-text-muted max-w-md">
+                      {request.author_phone
+                        ? `Koordinasi langsung dengan pemohon (${authorName}) melalui WhatsApp untuk menyepakati waktu dan rincian bantuan.`
+                        : `Pemohon belum mencantumkan nomor WhatsApp langsung pada formulir permohonan ini.`}
+                    </p>
+                    {request.author_phone && (
+                      <div className="flex items-center gap-1.5 font-mono text-[11px] text-text-muted pt-0.5">
+                        <Phone size={11} />
+                        <span>Nomor Kontak: <strong>{request.author_phone}</strong></span>
+                      </div>
+                    )}
+                  </div>
+
+                  {request.author_phone ? (
+                    <a
+                      href={formatWhatsAppLink(request.author_phone, authorName, request.title)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full sm:w-auto px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white border-2 border-border-custom retro-btn inline-flex items-center justify-center gap-2 flex-shrink-0 transition-colors"
+                    >
+                      <MessageCircle size={16} />
+                      <span>Chat ke WhatsApp</span>
+                    </a>
+                  ) : (
+                    <div className="font-mono text-[11px] text-text-muted border border-border-custom/50 px-3 py-1.5 bg-bg-slate-gray">
+                      Nomor WA Tidak Tersedia
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Volunteer info card */}
               {request.volunteer_name && (
                 <div className="bg-bg-slate-gray border-2 border-border-custom p-3.5 font-mono text-xs space-y-1">

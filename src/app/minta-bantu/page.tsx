@@ -30,6 +30,7 @@ export default function MintaBantuPage() {
     description: '',
     category: CATEGORIES[0],
     location: '',
+    phone: '',
   });
 
   useEffect(() => {
@@ -47,6 +48,12 @@ export default function MintaBantuPage() {
           user.email?.split('@')[0] ||
           'Warga Anonim'
         );
+        if (user.user_metadata?.phone_number) {
+          setFormData((prev) => ({
+            ...prev,
+            phone: user.user_metadata.phone_number,
+          }));
+        }
         setCheckingAuth(false);
       }
     };
@@ -99,13 +106,14 @@ export default function MintaBantuPage() {
 
           const { error } = await supabase.from('help_requests').insert([
             {
-              title:       formData.title,
-              description: formData.description,
-              category:    formData.category,
-              location:    formData.location,
-              status:      'menunggu',
-              user_id:     currentUserId,
-              author_name: currentAuthorName,
+              title:        formData.title,
+              description:  formData.description,
+              category:     formData.category,
+              location:     formData.location,
+              status:       'menunggu',
+              user_id:      currentUserId,
+              author_name:  currentAuthorName,
+              author_phone: formData.phone.trim() || null,
             },
           ]);
 
@@ -263,10 +271,29 @@ export default function MintaBantuPage() {
             )}
           </div>
 
+          {/* Nomor WhatsApp */}
+          <div>
+            <label className="block font-mono text-xs font-bold uppercase tracking-wider text-text-primary mb-1.5 flex items-center justify-between">
+              <span>4. Nomor WhatsApp / Kontak Aktif:</span>
+              <span className="text-[10px] text-text-muted normal-case font-normal">(Opsional tapi disarankan)</span>
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full px-3 py-2.5 border-2 border-border-custom bg-input-bg text-text-primary text-xs sm:text-sm rounded-none focus:outline-none"
+              placeholder="Contoh: 081234567890"
+            />
+            <p className="font-mono text-[11px] text-text-muted mt-1">
+              Nomor ini akan digunakan relawan untuk menghubungi Anda via WhatsApp setelah bersedia membantu.
+            </p>
+          </div>
+
           {/* Deskripsi */}
           <div>
             <label className="block font-mono text-xs font-bold uppercase tracking-wider text-text-primary mb-1.5">
-              4. Uraian Keterangan Lengkap (Minimal 20 Karakter):
+              5. Uraian Keterangan Lengkap (Minimal 20 Karakter):
             </label>
             <textarea
               name="description"
@@ -276,7 +303,7 @@ export default function MintaBantuPage() {
               value={formData.description}
               onChange={handleChange}
               className="w-full px-3 py-2.5 border-2 border-border-custom bg-input-bg text-text-primary text-xs sm:text-sm rounded-none focus:outline-none resize-none"
-              placeholder="Jelaskan kebutuhan Anda, nomor kontak yang bisa dihubungi, atau kondisi mendesak lainnya..."
+              placeholder="Jelaskan kebutuhan Anda, kondisi mendesak, atau arahan khusus lainnya..."
             />
             <div className="font-mono text-[11px] text-text-muted text-right mt-1">
               {formData.description.length} karakter dicatat

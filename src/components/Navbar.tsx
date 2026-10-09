@@ -130,14 +130,21 @@ export default function Navbar() {
             </button>
 
             {user ? (
-              <div className="h-9 flex items-center border-2 border-border-custom bg-card px-2 gap-2">
-                <User size={13} className="text-text-muted flex-shrink-0" />
-                <span className="text-[11px] font-bold text-text-primary max-w-[90px] lg:max-w-[140px] truncate">
-                  {user.user_metadata?.full_name || user.email?.split('@')[0]}
-                </span>
+              <div className="h-9 flex items-center border-2 border-border-custom bg-card px-1.5 gap-1.5">
+                <Link
+                  href="/profil"
+                  className="flex items-center gap-1.5 px-1.5 py-1 hover:bg-bg-slate-gray transition-colors group"
+                  title="Lihat & Edit Profil Saya"
+                >
+                  <User size={13} className="text-text-muted group-hover:text-text-primary flex-shrink-0" />
+                  <span className="text-[11px] font-bold text-text-primary max-w-[85px] lg:max-w-[130px] truncate group-hover:underline">
+                    {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                  </span>
+                </Link>
+                <div className="h-4 w-[1px] bg-border-custom/40" />
                 <button
                   onClick={handleLogout}
-                  className="h-6 px-2 text-[10px] font-bold uppercase border-2 border-border-custom bg-text-primary text-background hover:opacity-80 whitespace-nowrap cursor-pointer"
+                  className="h-6 px-2 text-[10px] font-bold uppercase border border-border-custom bg-text-primary text-background hover:opacity-80 whitespace-nowrap cursor-pointer"
                 >
                   Keluar
                 </button>
@@ -200,9 +207,19 @@ export default function Navbar() {
           <div className="px-3 pb-3 pt-1 border-t-2 border-border-custom/40 space-y-1.5">
             {user ? (
               <>
-                <div className="text-[11px] text-text-muted px-1 py-1 font-mono">
-                  Akun: <strong>{user.user_metadata?.full_name || user.email}</strong>
-                </div>
+                <Link
+                  href="/profil"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center justify-between px-3 h-11 text-xs font-bold uppercase tracking-wider border-2 border-border-custom bg-card text-text-primary hover:bg-bg-slate-gray"
+                >
+                  <span className="flex items-center gap-2">
+                    <User size={14} />
+                    <span>Profil Saya</span>
+                  </span>
+                  <span className="text-[10px] font-mono text-text-muted truncate max-w-[150px]">
+                    {user.user_metadata?.full_name || user.email} &rarr;
+                  </span>
+                </Link>
                 <button
                   onClick={() => { setIsOpen(false); handleLogout(); }}
                   className="w-full text-center px-3 h-11 text-xs font-bold uppercase tracking-wider border-2 border-border-custom bg-card text-text-primary hover:bg-bg-slate-gray cursor-pointer"
