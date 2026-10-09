@@ -18,12 +18,14 @@ CREATE TABLE IF NOT EXISTS public.help_requests (
   volunteer_id    UUID          REFERENCES auth.users(id) ON DELETE SET NULL,
   volunteer_name  TEXT,
   volunteer_email TEXT,
+  volunteer_phone TEXT,
   helped_at       TIMESTAMPTZ,
   created_at      TIMESTAMPTZ   DEFAULT NOW() NOT NULL
 );
 
 -- Migrasi jika tabel sudah pernah dibuat sebelumnya:
 ALTER TABLE public.help_requests ADD COLUMN IF NOT EXISTS author_phone TEXT;
+ALTER TABLE public.help_requests ADD COLUMN IF NOT EXISTS volunteer_phone TEXT;
 
 -- ── 2. Aktifkan RLS ────────────────────────────────────────
 ALTER TABLE public.help_requests ENABLE ROW LEVEL SECURITY;

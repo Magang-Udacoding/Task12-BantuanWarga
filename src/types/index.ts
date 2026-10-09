@@ -12,6 +12,7 @@ export interface HelpRequest {
   volunteer_id?: string;       // user_id relawan yang membantu
   volunteer_name?: string;     // nama relawan
   volunteer_email?: string;    // email relawan
+  volunteer_phone?: string;    // nomor whatsapp relawan
   helped_at?: string;          // waktu bantuan dikonfirmasi
 }
 
